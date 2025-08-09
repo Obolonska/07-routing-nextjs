@@ -13,7 +13,8 @@ export interface NotesResponse {
 
 export const getNotes = async (
   search: string,
-  page: number
+  page: number,
+  tag?: string
 ): Promise<NotesResponse> => {
   const response = await axios.get<NotesResponse>(`/notes`, {
     headers: {
@@ -21,9 +22,11 @@ export const getNotes = async (
     },
     params: {
       ...(search !== "" ? { search } : {}),
+      tag,
       page,
     },
   });
+  console.log("getNotes response:", response.data, "tag:", tag);
 
   return response.data;
 };
