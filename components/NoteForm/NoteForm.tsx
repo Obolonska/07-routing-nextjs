@@ -5,6 +5,7 @@ import { addNote } from "@/lib/api";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import type { FormikHelpers } from "formik";
 import * as Yup from "yup";
+import { useRouter } from "next/navigation";
 
 const initialValues: NewNote = {
   title: "",
@@ -29,13 +30,13 @@ interface NoteFormProps {
 }
 
 export default function NoteForm({ onSuccess, onCancel }: NoteFormProps) {
+  const router = useRouter();
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
     mutationFn: (noteData: NewNote) => addNote(noteData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
-      onSuccess();
     },
   });
 
@@ -43,6 +44,7 @@ export default function NoteForm({ onSuccess, onCancel }: NoteFormProps) {
     mutate(values, {
       onSuccess: () => {
         helpers.resetForm();
+        router.push(`/notes/filter/${values.tag}`);
         onSuccess();
       },
     });

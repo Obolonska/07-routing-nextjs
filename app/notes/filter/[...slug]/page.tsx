@@ -9,19 +9,16 @@ export const metadata: Metadata = {
 type Props = {
   params: Promise<{ slug: string[] }>;
 };
-
 export default async function NotesPage({ params }: Props) {
   const { slug } = await params;
-  const { notes, totalPages } = await getNotes(
-    "",
-    1,
-    slug[0] === "all" ? undefined : slug[0]
-  );
-  console.log("slug", slug);
+
+  const tagNote = slug[0] === "all" ? undefined : slug[0];
+
+  const { notes, totalPages } = await getNotes("", 1, tagNote);
 
   return (
     <section>
-      <NotesClient notes={notes} totalPages={totalPages} />
+      <NotesClient notes={notes} totalPages={totalPages} initialTag={tagNote} />
     </section>
   );
 }

@@ -15,7 +15,6 @@ export default function Header() {
           </li>
           <li>
             <TagsMenu />
-            {/* <Link>TagsMenu</Link> */}
           </li>
         </ul>
       </nav>

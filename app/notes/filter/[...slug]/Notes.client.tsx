@@ -18,7 +18,11 @@ const useToggle = (): [boolean, () => void, () => void] => {
   return [isOpen, () => setIsOpen(true), () => setIsOpen(false)];
 };
 
-export default function NotesClient({ notes, totalPages }: NotesResponse) {
+export default function NotesClient({
+  notes,
+  totalPages,
+  initialTag,
+}: NotesResponse & { initialTag?: string }) {
   const [isModalOpen, openModal, closeModal] = useToggle();
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
@@ -29,8 +33,8 @@ export default function NotesClient({ notes, totalPages }: NotesResponse) {
   }, 300);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["notes", searchQuery, page],
-    queryFn: () => getNotes(searchQuery, page),
+    queryKey: ["notes", searchQuery, page, initialTag],
+    queryFn: () => getNotes(searchQuery, page, initialTag),
     initialData: { notes, totalPages },
     placeholderData: keepPreviousData,
   });
