@@ -1,5 +1,5 @@
 "use client";
-import css from "./NotePreviewClient.module.css";
+import css from "./NotePreview.module.css";
 import Modal from "@/components/Modal/Modal";
 import { getSingleNote } from "@/lib/api";
 import { Note } from "@/types/note";
