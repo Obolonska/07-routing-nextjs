@@ -18,11 +18,15 @@ const useToggle = (): [boolean, () => void, () => void] => {
   return [isOpen, () => setIsOpen(true), () => setIsOpen(false)];
 };
 
+interface NotesClientProps extends NotesResponse {
+  initialTag?: string;
+}
+
 export default function NotesClient({
   notes,
   totalPages,
   initialTag,
-}: NotesResponse & { initialTag?: string }) {
+}: NotesClientProps) {
   const [isModalOpen, openModal, closeModal] = useToggle();
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
