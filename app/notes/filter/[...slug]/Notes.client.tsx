@@ -19,7 +19,7 @@ const useToggle = (): [boolean, () => void, () => void] => {
 };
 
 interface NotesClientProps extends NotesResponse {
-  initialTag: string;
+  initialTag?: string;
 }
 
 export default function NotesClient({
