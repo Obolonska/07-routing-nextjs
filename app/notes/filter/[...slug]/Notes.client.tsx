@@ -18,23 +18,30 @@ const useToggle = (): [boolean, () => void, () => void] => {
   return [isOpen, () => setIsOpen(true), () => setIsOpen(false)];
 };
 
-interface NotesClientProps extends NotesResponse {
+interface NotesClientProps {
+  initialData: NotesResponse; // об'єкт із notes та totalPages
   initialTag?: string;
 }
 
 export default function NotesClient({
-  notes,
-  totalPages,
+  initialData,
   initialTag,
 }: NotesClientProps) {
+  const { notes, totalPages } = initialData;
   const [isModalOpen, openModal, closeModal] = useToggle();
   const [searchQuery, setSearchQuery] = useState("");
+  const [inputValue, setInputValue] = useState("");
   const [page, setPage] = useState(1);
 
-  const updateSearchQuery = useDebouncedCallback((newQuery: string) => {
-    setSearchQuery(newQuery);
+  const updateSearchQuery = useDebouncedCallback((value: string) => {
+    setSearchQuery(value);
     setPage(1);
   }, 300);
+
+  const handleInputChange = (newValue: string) => {
+    setInputValue(newValue); // миттєво показує користувачу
+    updateSearchQuery(newValue); // запускає пошук із затримкою
+  };
 
   const { data, isLoading } = useQuery({
     queryKey: ["notes", searchQuery, page, initialTag],
@@ -48,7 +55,7 @@ export default function NotesClient({
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        <SearchBox value={searchQuery} onSearch={updateSearchQuery} />
+        <SearchBox value={inputValue} onSearch={handleInputChange} />
         {currentTotalPages > 1 && (
           <Pagination
             totalPages={currentTotalPages}
@@ -62,11 +69,12 @@ export default function NotesClient({
         </button>
       </header>
 
-      {data && data.notes.length === 0 && (
+      {data && data.notes.length > 0 && <NoteList notes={data.notes} />}
+
+      {isLoading && <p>Loading...</p>}
+
+      {data && !isLoading && data.notes.length === 0 && (
         <EmptyState message="No notes found." />
-      )}
-      {data && !isLoading && data.notes.length > 0 && (
-        <NoteList notes={data.notes} />
       )}
 
       {isModalOpen && (

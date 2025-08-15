@@ -18,7 +18,7 @@ export default async function NotesPage({ params }: Props) {
 
   return (
     <section>
-      <NotesClient notes={notes} totalPages={totalPages} initialTag={tagNote} />
+      <NotesClient initialData={{ notes, totalPages }} initialTag={tagNote} />
     </section>
   );
 }
